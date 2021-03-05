@@ -10,14 +10,12 @@ module GitDiffLcs
   end
 
   def self.diff(repo, src, dest)
-    dir = Dir.mktmpdir
     # DiffWithModification.new
     # param1(String) : directory for clone
     # param2(String) : git address
     # param3(String) : src commit
     # param4(String) : dest commit
-    diff = GitDiffLcs::Stat.new(dir, repo, src, dest)
-    FileUtils.rm_rf(dir)
+    diff = GitDiffLcs::Stat.new(repo, src, dest)
     diff.summary
   end
 end
