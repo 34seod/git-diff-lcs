@@ -5,6 +5,7 @@
 # https://github.com/halostatue/diff-lcs
 # $ gem install diff-lcs
 # $ gem install git
+# $ ruby core.rb https://github.com/btpink-seo/git-diff-lcs.git main gem
 
 require "diff/lcs"
 require "fileutils"
@@ -15,17 +16,19 @@ class DiffWithModification
   SRC_FOLDER = "diff_src"
   DEST_FOLDER = "diff_dest"
 
-  def initialize(dir, git, src, dest)
-    git_src = git_clone(git, dir, dest, src)
-
-    @dir = dir
+  def initialize(repo, src, dest)
     @go_next = false
-    @diff = git_src.diff(src, dest)
-    @target_files = @diff.name_status.keys
+    @dir = Dir.mktmpdir
     @add = 0
     @del = 0
     @mod = 0
+    @target_files = []
+
+    @diff = git_clone(repo, src, dest).diff(src, dest)
+    @target_files = @diff.name_status.keys
     calculate
+  rescue Git::GitExecuteError
+    puts "[ERROR] wrong git info(repo or src or dest)"
   end
 
   def summary
@@ -48,9 +51,13 @@ class DiffWithModification
 
   private
 
-  def git_clone(git, dir, dest, src)
-    git_src = Git.clone(git, SRC_FOLDER, path: dir)
-    git_dest = Git.clone(git, DEST_FOLDER, path: dir)
+  def close
+    FileUtils.rm_rf(@dir)
+  end
+
+  def git_clone(repo, src, dest)
+    git_src = Git.clone(repo, SRC_FOLDER, path: @dir)
+    git_dest = Git.clone(repo, DEST_FOLDER, path: @dir)
     git_src.checkout(dest)
     git_src.checkout(src)
     git_dest.checkout(dest)
@@ -99,6 +106,7 @@ class DiffWithModification
       diffs = Diff::LCS.sdiff(src.readlines, dest.readlines)
       diffs.each { |d| add_result(d) }
     end
+    close
   end
   # rubocop:enable Metrics/MethodLength
 end
@@ -110,6 +118,6 @@ dir = Dir.mktmpdir
 # param3(String) : src commit
 # param4(String) : dest commit
 diff = DiffWithModification.new(dir, ARGV[0], ARGV[1], ARGV[2])
-diff.summary
+puts diff.summary
 
 FileUtils.rm_rf(dir)
