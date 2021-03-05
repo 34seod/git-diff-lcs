@@ -1,31 +1,33 @@
 # frozen_string_literal: true
 
+require "securerandom"
 require "diff/lcs"
-require "fileutils"
 require "git"
 
 # git diff lcs
 module GitDiffLcs
   # stat
   class Stat
-    SRC_FOLDER = "diff_src"
-    DEST_FOLDER = "diff_dest"
+    SRC_FOLDER = "src_#{SecureRandom.uuid}"
+    DEST_FOLDER = "dest_#{SecureRandom.uuid}"
 
-    def initialize(git, src, dest)
+    def initialize(repo, src, dest)
       @go_next = false
       @dir = Dir.mktmpdir
       @add = 0
       @del = 0
       @mod = 0
 
-      @diff = git_clone(git, dest, src).diff(src, dest)
+      @diff = git_clone(repo, src, dest).diff(src, dest)
       @target_files = @diff.name_status.keys
       calculate
+    rescue Git::GitExecuteError
+      puts "[ERROR] wrong git info(repo or src or dest)"
     end
 
     def summary
       total = @add + @del + @mod
-      changed = @target_files.size
+      changed = (@target_files || []).size
       "#{changed} files changed, #{@add} insertions(+), #{@del} deletions(-), #{@mod} modifications(!), total(#{total})"
     end
 
@@ -47,9 +49,9 @@ module GitDiffLcs
       FileUtils.rm_rf(@dir)
     end
 
-    def git_clone(git, dest, src)
-      git_src = Git.clone(git, SRC_FOLDER, path: @dir)
-      git_dest = Git.clone(git, DEST_FOLDER, path: @dir)
+    def git_clone(repo, src, dest)
+      git_src = Git.clone(repo, SRC_FOLDER, path: @dir)
+      git_dest = Git.clone(repo, DEST_FOLDER, path: @dir)
       git_src.checkout(dest)
       git_src.checkout(src)
       git_dest.checkout(dest)
