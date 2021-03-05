@@ -1,96 +1,115 @@
 # frozen_string_literal: true
 
-# # https://qiita.com/s-show/items/c14958abdf35f7c45a88
-# # https://github.com/ruby-git/ruby-git
-# # https://github.com/halostatue/diff-lcs
-# # $ gem install diff-lcs
-# # $ gem install git
+# https://qiita.com/s-show/items/c14958abdf35f7c45a88
+# https://github.com/ruby-git/ruby-git
+# https://github.com/halostatue/diff-lcs
+# $ gem install diff-lcs
+# $ gem install git
 
-# require 'diff/lcs'
-# require 'fileutils'
-# require 'git'
+require "diff/lcs"
+require "fileutils"
+require "git"
 
-# class DiffWithModification
-#   SRC_FOLDER = 'diff_src'.freeze
-#   DEST_FOLDER = 'diff_dest'.freeze
+# CORE
+class DiffWithModification
+  SRC_FOLDER = "diff_src"
+  DEST_FOLDER = "diff_dest"
 
-#   def initialize(dir, git, src, dest)
-#     git_src = Git.clone(git, SRC_FOLDER, path: dir)
-#     git_dest = Git.clone(git, DEST_FOLDER, path: dir)
-#     git_src.checkout(dest)
-#     git_src.checkout(src)
-#     git_dest.checkout(dest)
+  def initialize(dir, git, src, dest)
+    git_src = git_clone(git, dir, dest, src)
 
-#     @dir = dir
-#     @diff = git_src.diff(src, dest)
-#     @target_files = @diff.name_status.keys
-#     @add = 0
-#     @del = 0
-#     @mod = 0
-#     calculate
-#   end
+    @dir = dir
+    @go_next = false
+    @diff = git_src.diff(src, dest)
+    @target_files = @diff.name_status.keys
+    @add = 0
+    @del = 0
+    @mod = 0
+    calculate
+  end
 
-#   def summary
-#     t = @add + @del + @mod
-#     c = @target_files.size
-#     puts "#{c} files changed, #{@add} insertions(+), #{@del} deletions(-), #{@mod} modifications(!), total(#{t})"
-#   end
+  def summary
+    total = @add + @del + @mod
+    changed = @target_files.size
+    "#{changed} files changed, #{@add} insertions(+), #{@del} deletions(-), #{@mod} modifications(!), total(#{total})"
+  end
 
-#   def insertions
-#     @add
-#   end
+  def insertions
+    @add
+  end
 
-#   def deletions
-#     @del
-#   end
+  def deletions
+    @del
+  end
 
-#   def modifications
-#     @mod
-#   end
+  def modifications
+    @mod
+  end
 
-#   private
+  private
 
-#   def calculate
-#     @target_files.each do |file|
-#       src_filename = "#{@dir}/#{SRC_FOLDER}/#{file}"
-#       dest_filename = "#{@dir}/#{DEST_FOLDER}/#{file}"
+  def git_clone(git, dir, dest, src)
+    git_src = Git.clone(git, SRC_FOLDER, path: dir)
+    git_dest = Git.clone(git, DEST_FOLDER, path: dir)
+    git_src.checkout(dest)
+    git_src.checkout(src)
+    git_dest.checkout(dest)
+    git_src
+  end
 
-#       begin
-#         src = File.open(src_filename)
-#       rescue Errno::ENOENT
-#         # p "new file in dest #{file}"
-#         (@add += File.open(dest_filename).readlines.size) rescue nil
-#         next
-#       end
+  def open_src_file(src_filename, dest_filename)
+    File.open(src_filename)
+  rescue Errno::ENOENT
+    # p "new file in dest #{file}"
+    @add += open_dest_file(dest_filename).readlines.size
+    @go_next = true
+  end
 
-#       begin
-#         dest = File.open(dest_filename)
-#       rescue Errno::ENOENT
-#         # p "deleted file in dest #{file}"
-#         @del += src.readlines.size
-#         next
-#       end
+  def open_dest_file(dest_filename)
+    File.open(dest_filename)
+  rescue Errno::ENOENT
+    # p "deleted file in dest #{file}"
+    @del += src.readlines.size
+    @go_next = true
+  end
 
-#       next if FileUtils.cmp(src_filename, dest_filename)
+  def add_result(diff)
+    # p diff if diff.adding? || diff.deleting? || diff.changed?
+    @add += 1 if diff.adding?
+    @del += 1 if diff.deleting?
+    @mod += 1 if diff.changed?
+  end
 
-#       diffs = Diff::LCS.sdiff(src.readlines, dest.readlines)
-#       diffs.each do |d|
-#         @add += 1 if d.adding?
-#         @del += 1 if d.deleting?
-#         @mod += 1 if d.changed?
-#         # p dest_filename, d if d.adding? || d.deleting? || d.changed?
-#       end
-#     end
-#   end
-# end
+  # rubocop:disable Metrics/MethodLength
+  def calculate
+    @target_files.each do |file|
+      src_filename = "#{@dir}/#{SRC_FOLDER}/#{file}"
+      dest_filename = "#{@dir}/#{DEST_FOLDER}/#{file}"
 
-# dir = Dir.mktmpdir
-# # DiffWithModification.new
-# # param1(String) : directory for clone
-# # param2(String) : git address
-# # param3(String) : src commit
-# # param4(String) : dest commit
-# diff = DiffWithModification.new(dir, ARGV[0], ARGV[1], ARGV[2])
-# diff.summary
+      src = open_src_file(src_filename, dest_filename)
+      dest = open_dest_file(dest_filename)
 
-# FileUtils.rm_rf(dir)
+      if @go_next
+        @go_next = false
+        next
+      end
+
+      next if FileUtils.cmp(src_filename, dest_filename)
+
+      diffs = Diff::LCS.sdiff(src.readlines, dest.readlines)
+      diffs.each { |d| add_result(d) }
+    end
+  end
+  # rubocop:enable Metrics/MethodLength
+end
+
+dir = Dir.mktmpdir
+# DiffWithModification.new
+# param1(String) : directory for clone
+# param2(String) : git address
+# param3(String) : src commit
+# param4(String) : dest commit
+diff = DiffWithModification.new(dir, ARGV[0], ARGV[1], ARGV[2])
+diff.summary
+
+FileUtils.rm_rf(dir)
