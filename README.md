@@ -1,8 +1,16 @@
-# git-diff-lsc
+# GitDiffLcs
 
 Generally, git diff --stat does not contain modifications, so we added it to display modifications using the LCS algorithm.
 
-# How to use
+## Installation
+
+Add this line to your application's Gemfile:
+
+```ruby
+gem 'git_diff_lcs'
+```
+
+## How to use
 ```
 $ gem install git_diff_lcs
 ```
