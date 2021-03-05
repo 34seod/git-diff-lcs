@@ -17,6 +17,7 @@ module GitDiffLcs
       @add = 0
       @del = 0
       @mod = 0
+      @target_files = []
 
       @diff = git_clone(repo, src, dest).diff(src, dest)
       @target_files = @diff.name_status.keys
@@ -27,7 +28,7 @@ module GitDiffLcs
 
     def summary
       total = @add + @del + @mod
-      changed = (@target_files || []).size
+      changed = @target_files.size
       "#{changed} files changed, #{@add} insertions(+), #{@del} deletions(-), #{@mod} modifications(!), total(#{total})"
     end
 
