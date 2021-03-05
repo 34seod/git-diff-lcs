@@ -4,8 +4,11 @@ Generally, git diff --stat does not contain modifications, so we added it to dis
 
 # How to use
 ```
-$ gem install diff-lcs
-$ gem install git
-$ ruby diff_git_clone.rb [git repository address] [src branch or commit] [dest branch or commit]
-=> 169 files changed, 10407 insertions(+), 84 deletions(-), 134 modifications(!), total(10625)
+$ gem install git_diff_lcs
+```
+
+```ruby
+require 'git_diff_lcs'
+
+GitDiffLcs.diff('https://github.com/halostatue/diff-lcs.git', 'ee246c0924f0d1fa0d1be0a5503215da7f15903f', 'main')
 ```
