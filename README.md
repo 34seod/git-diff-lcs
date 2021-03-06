@@ -21,7 +21,6 @@ $ git_diff_lcs diff https://github.com/btpink-seo/git-diff-lcs.git test/src test
 
 src, dest is branch name or commit
 
-example
 ```ruby
 require 'git_diff_lcs'
 
