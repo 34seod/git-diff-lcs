@@ -13,9 +13,8 @@ Gem::Specification.new do |spec|
   spec.homepage    = "https://github.com/btpink-seo/git-diff-lcs"
   spec.required_ruby_version = ">= 2.4.0"
 
-  # spec.files       = ["lib/git_diff_lcs.rb", "lib/git_diff_lcs/stat.rb", "lib/git_diff_lcs/version.rb"]
   spec.files = Dir.chdir(File.expand_path(__dir__)) do
-    `git ls-files -z`.split("\x0").reject { |f| f.match(%r{\A(?:test|spec|features)/}) }
+    `git ls-files -z`.split("\x0").reject { |f| f.match(%r{\A(?:test|spec|features|script)/}) }
   end
   spec.require_paths = ["lib"]
   spec.bindir        = "exe"

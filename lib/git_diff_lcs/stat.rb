@@ -10,13 +10,15 @@ module GitDiffLcs
   class Stat
     SRC_FOLDER = "src_#{SecureRandom.uuid}"
     DEST_FOLDER = "dest_#{SecureRandom.uuid}"
+    INIT_COUNT = [0, 0, 0].freeze
 
+    # repo(String) : git repository address
+    # src(String) : src commit or branch
+    # dest(String) : dest commit or branch
     def initialize(repo, src, dest)
       @go_next = false
       @dir = Dir.mktmpdir
-      @add = 0
-      @del = 0
-      @mod = 0
+      @add, @del, @mod = *INIT_COUNT
       @target_files = []
 
       @diff = git_clone(repo, src, dest).diff(src, dest)
@@ -51,12 +53,11 @@ module GitDiffLcs
     end
 
     def git_clone(repo, src, dest)
-      git_src = Git.clone(repo, SRC_FOLDER, path: @dir)
-      git_dest = Git.clone(repo, DEST_FOLDER, path: @dir)
-      git_src.checkout(dest)
-      git_src.checkout(src)
-      git_dest.checkout(dest)
-      git_src
+      git = Git.clone(repo, SRC_FOLDER, path: @dir)
+      git.checkout(dest)
+      FileUtils.copy_entry("#{@dir}/#{SRC_FOLDER}", "#{@dir}/#{DEST_FOLDER}")
+      git.checkout(src)
+      git
     end
 
     def open_src_file(src_filename, dest_filename)
@@ -91,11 +92,7 @@ module GitDiffLcs
         src = open_src_file(src_filename, dest_filename)
         dest = open_dest_file(dest_filename)
 
-        if @go_next
-          @go_next = false
-          next
-        end
-
+        next if @go_next && !(@go_next = false)
         next if FileUtils.cmp(src_filename, dest_filename)
 
         diffs = Diff::LCS.sdiff(src.readlines, dest.readlines)
