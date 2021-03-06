@@ -18,7 +18,7 @@ Gem::Specification.new do |spec|
   end
   spec.require_paths = ["lib"]
   spec.bindir        = "exe"
-  spec.executables   = spec.files.grep(%r{\Aexe/}) { |f| File.basename(f) }
+  spec.executables   << "git_diff_lcs"
 
   spec.license       = "MIT"
   spec.add_dependency "diff-lcs", "1.4.4"
