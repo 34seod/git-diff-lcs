@@ -64,11 +64,11 @@ module GitDiffLcs
       File.open(src_filename)
     rescue Errno::ENOENT
       # p "new file in dest #{file}"
-      @add += open_dest_file(dest_filename).readlines.size
+      @add += open_dest_file(nil, dest_filename).readlines.size
       @go_next = true
     end
 
-    def open_dest_file(dest_filename)
+    def open_dest_file(src, dest_filename)
       File.open(dest_filename)
     rescue Errno::ENOENT
       # p "deleted file in dest #{file}"
@@ -90,7 +90,7 @@ module GitDiffLcs
         dest_filename = "#{@dir}/#{DEST_FOLDER}/#{file}"
 
         src = open_src_file(src_filename, dest_filename)
-        dest = open_dest_file(dest_filename)
+        dest = open_dest_file(src, dest_filename)
 
         next if @go_next && !(@go_next = !@go_next)
         next if FileUtils.cmp(src_filename, dest_filename)
