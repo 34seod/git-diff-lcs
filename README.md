@@ -12,12 +12,13 @@ $ gem install git_diff-lcs
 ### CLI
 
 ```bash
+$ git_diff_lcs diff [GIT_REPOSITORY] [SRC(BRANCH OR COMMIT)] [DEST(BRANCH OR COMMIT)]
 $ git_diff_lcs diff https://github.com/btpink-seo/git-diff-lcs.git test/src test/dest
 ```
 
 ### Ruby
 
-#### diff(repo, src, dest)
+#### GitDiffLcs.diff(repo, src, dest)
 
 src, dest is branch name or commit
 

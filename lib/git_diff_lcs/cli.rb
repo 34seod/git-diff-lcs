@@ -10,7 +10,7 @@ module GitDiffLcs
       true
     end
 
-    desc "diff GIT_REPOSITORY, SRC(BRANCH OR COMMIT), DEST(BRANCH OR COMMIT)", "get diff with LCS"
+    desc "diff GIT_REPOSITORY SRC(BRANCH OR COMMIT) DEST(BRANCH OR COMMIT)", "get diff with LCS"
     def diff(repo, src, dest)
       puts GitDiffLcs.diff(repo, src, dest)
     end
