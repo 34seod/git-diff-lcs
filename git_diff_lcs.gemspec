@@ -23,4 +23,5 @@ Gem::Specification.new do |spec|
   spec.license       = "MIT"
   spec.add_dependency "diff-lcs", "1.4.4"
   spec.add_dependency "git", "1.8.1"
+  spec.add_runtime_dependency "thor", "1.1.0"
 end

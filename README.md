@@ -9,7 +9,15 @@ $ gem install git_diff-lcs
 
 ## How to use
 
-### diff(repo, src, dest)
+### CLI
+
+```bash
+$ git_diff_lcs diff https://github.com/btpink-seo/git-diff-lcs.git test/src test/dest
+```
+
+### Ruby
+
+#### diff(repo, src, dest)
 
 src, dest is branch name or commit
 
@@ -21,7 +29,7 @@ GitDiffLcs.diff('https://github.com/btpink-seo/git-diff-lcs.git', 'test/src', 't
 # => 5 files changed, 13 insertions(+), 6 deletions(-), 2 modifications(!), total(21)
 ```
 
-### GitDiffLcs::Stat.new(repo, src, dest)
+#### GitDiffLcs::Stat.new(repo, src, dest)
 
 ```ruby
 require 'git_diff_lcs'

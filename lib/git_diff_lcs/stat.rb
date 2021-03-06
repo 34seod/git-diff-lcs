@@ -4,9 +4,9 @@ require "securerandom"
 require "diff/lcs"
 require "git"
 
-# git diff lcs
+# Git Diff LCS
 module GitDiffLcs
-  # stat
+  # Stat
   class Stat
     SRC_FOLDER = "src_#{SecureRandom.uuid}"
     DEST_FOLDER = "dest_#{SecureRandom.uuid}"

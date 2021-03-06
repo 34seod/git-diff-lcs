@@ -1,9 +1,10 @@
 PATH
   remote: .
   specs:
-    git_diff_lcs (0.0.3)
+    git_diff_lcs (0.0.4)
       diff-lcs (= 1.4.4)
       git (= 1.8.1)
+      thor (= 1.1.0)
 
 GEM
   remote: https://rubygems.org/
@@ -45,6 +46,7 @@ GEM
     rubocop-ast (1.4.1)
       parser (>= 2.7.1.5)
     ruby-progressbar (1.11.0)
+    thor (1.1.0)
     unicode-display_width (1.7.0)
 
 PLATFORMS
