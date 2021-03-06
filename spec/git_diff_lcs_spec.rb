@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# rubocop:disable Layout/LineLength, Metrics/BlockLength
 RSpec.describe GitDiffLcs do
   let(:repo) { "https://github.com/btpink-seo/git-diff-lcs.git" }
   let(:src_branch) { "test/src" }
@@ -17,7 +18,7 @@ RSpec.describe GitDiffLcs do
   end
 
   describe "GitDiffLcs::Stat" do
-    context 'branch' do
+    context "branch" do
       let!(:stat_branch) { GitDiffLcs::Stat.new(repo, src_branch, dest_branch) }
 
       it "summary" do
@@ -37,7 +38,7 @@ RSpec.describe GitDiffLcs do
       end
     end
 
-    context 'commit' do
+    context "commit" do
       let!(:stat_commit) { GitDiffLcs::Stat.new(repo, src_commit, dest_commit) }
 
       it "summary" do
@@ -57,7 +58,7 @@ RSpec.describe GitDiffLcs do
       end
     end
 
-    context 'mix(branch, commit)' do
+    context "mix(branch, commit)" do
       let!(:stat_mix1) { GitDiffLcs::Stat.new(repo, src_branch, dest_commit) }
       let!(:stat_mix2) { GitDiffLcs::Stat.new(repo, src_commit, dest_branch) }
 
@@ -83,3 +84,4 @@ RSpec.describe GitDiffLcs do
     end
   end
 end
+# rubocop:enable Layout/LineLength, Metrics/BlockLength
