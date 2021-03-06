@@ -2,8 +2,9 @@
 
 require "git_diff_lcs/stat"
 require "git_diff_lcs/version"
+require "git_diff_lcs/cli"
 
-# git diff lcs
+# Git Diff LCS
 module GitDiffLcs
   def self.diff(repo, src, dest)
     diff = GitDiffLcs::Stat.new(repo, src, dest)
