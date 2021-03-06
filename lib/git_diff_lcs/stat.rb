@@ -92,7 +92,7 @@ module GitDiffLcs
         src = open_src_file(src_filename, dest_filename)
         dest = open_dest_file(dest_filename)
 
-        next if @go_next && !(@go_next = false)
+        next if @go_next && !(@go_next = !@go_next)
         next if FileUtils.cmp(src_filename, dest_filename)
 
         diffs = Diff::LCS.sdiff(src.readlines, dest.readlines)

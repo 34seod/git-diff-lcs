@@ -12,4 +12,5 @@ $ gem install git_diff-lcs
 require 'git_diff_lcs'
 
 GitDiffLcs.diff('https://github.com/btpink-seo/git-diff-lcs.git', 'main', 'gem')
+# => 169 files changed, 10407 insertions(+), 84 deletions(-), 134 modifications(!), total(10625)
 ```
