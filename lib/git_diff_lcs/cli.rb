@@ -2,7 +2,6 @@
 
 require "thor"
 
-# Git Diff LCS
 module GitDiffLCS
   # Command Line Interface
   class CLI < Thor
@@ -10,9 +9,9 @@ module GitDiffLCS
       true
     end
 
-    desc "diff GIT_REPOSITORY SRC(BRANCH OR COMMIT) DEST(BRANCH OR COMMIT)", "get diff with LCS"
-    def diff(repo, src, dest)
-      puts GitDiffLCS.diff(repo, src, dest)
+    desc "shortstat GIT_REPOSITORY SRC(BRANCH OR COMMIT) DEST(BRANCH OR COMMIT)", "get diff with LCS"
+    def shortstat(repo, src, dest)
+      puts GitDiffLCS.shortstat(repo, src, dest)
     end
   end
 end

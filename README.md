@@ -9,38 +9,18 @@ $ gem install git_diff-lcs
 
 ## How to use
 
-### CLI
+```bash
+$ git_diff_lcs shortstat  [GIT_REPOSITORY or WORKING_DIRECTORY] [SRC(branch or commit)] [DEST(branch or commit)]
+$ git_diff_lcs shortstat  https://github.com/btpink-seo/git-diff-lcs.git test/src test/dest
+$ git_diff_lcs shortstat  workspace/git-diff-lcs test/src test/dest
+```
+
+## compare with git diff
 
 ```bash
-$ git_diff_lcs diff [GIT_REPOSITORY] [SRC(BRANCH OR COMMIT)] [DEST(BRANCH OR COMMIT)]
-$ git_diff_lcs diff https://github.com/btpink-seo/git-diff-lcs.git test/src test/dest
-```
+$ git diff --shortstat test/src test/dest
+ 5 files changed, 15 insertions(+), 8 deletions(-)
 
-### Ruby
-
-#### GitDiffLCS.diff(repo, src, dest)
-
-src, dest is branch name or commit
-
-```ruby
-require 'git_diff_lcs'
-
-GitDiffLCS.diff('https://github.com/btpink-seo/git-diff-lcs.git', 'test/src', 'test/dest')
-# => 5 files changed, 13 insertions(+), 6 deletions(-), 2 modifications(!), total(21)
-```
-
-#### GitDiffLCS::Stat.new(repo, src, dest)
-
-```ruby
-require 'git_diff_lcs'
-
-stat = GitDiffLCS::Stat.new('https://github.com/btpink-seo/git-diff-lcs.git', 'test/src', 'test/dest')
-stat.summary
-# => 5 files changed, 13 insertions(+), 6 deletions(-), 2 modifications(!), total(21)
-stat.insertions
-# => 13
-stat.deletions
-# => 6
-stat.modifications
-# => 2
+$ git_diff_lcs shortstat https://github.com/btpink-seo/git-diff-lcs.git test/src test/dest
+ 5 files changed, 13 insertions(+), 6 deletions(-), 2 modifications(!), total(21)
 ```
