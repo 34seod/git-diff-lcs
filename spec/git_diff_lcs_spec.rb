@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # rubocop:disable Layout/LineLength, Metrics/BlockLength
-RSpec.describe GitDiffLcs do
+RSpec.describe GitDiffLCS do
   let(:repo) { "https://github.com/btpink-seo/git-diff-lcs.git" }
   let(:src_branch) { "test/src" }
   let(:dest_branch) { "test/dest" }
@@ -9,17 +9,28 @@ RSpec.describe GitDiffLcs do
   let(:dest_commit) { "cace7fcc5366a3f5e19976eb2cafa92c7a5793a1" }
 
   it "has a version number" do
-    expect(GitDiffLcs::VERSION).not_to be nil
+    expect(GitDiffLCS::VERSION).not_to be nil
   end
 
   it "diff result" do
-    result = GitDiffLcs.diff(repo, src_branch, dest_branch)
+    result = GitDiffLCS.diff(repo, src_branch, dest_branch)
     expect(result).to eq("5 files changed, 13 insertions(+), 6 deletions(-), 2 modifications(!), total(21)")
   end
 
-  describe "GitDiffLcs::Stat" do
+  it "has error message if wrong git info" do
+    result = GitDiffLCS.diff("", "", "")
+    expect(result).to eq("[ERROR] wrong git info(repository or src or dest)")
+  end
+
+  describe "GitDiffLCS::Stat" do
+    it "has error message if wrong git info" do
+      stat_errors = GitDiffLCS::Stat.new("", "", "").errors
+      expect(stat_errors.empty?).to be_falsey
+      expect(stat_errors.first).to eq("[ERROR] wrong git info(repository or src or dest)")
+    end
+
     context "branch" do
-      let!(:stat_branch) { GitDiffLcs::Stat.new(repo, src_branch, dest_branch) }
+      let!(:stat_branch) { GitDiffLCS::Stat.new(repo, src_branch, dest_branch) }
 
       it "summary" do
         expect(stat_branch.summary).to eq("5 files changed, 13 insertions(+), 6 deletions(-), 2 modifications(!), total(21)")
@@ -39,7 +50,7 @@ RSpec.describe GitDiffLcs do
     end
 
     context "commit" do
-      let!(:stat_commit) { GitDiffLcs::Stat.new(repo, src_commit, dest_commit) }
+      let!(:stat_commit) { GitDiffLCS::Stat.new(repo, src_commit, dest_commit) }
 
       it "summary" do
         expect(stat_commit.summary).to eq("5 files changed, 13 insertions(+), 6 deletions(-), 2 modifications(!), total(21)")
@@ -59,8 +70,8 @@ RSpec.describe GitDiffLcs do
     end
 
     context "mix(branch, commit)" do
-      let!(:stat_mix1) { GitDiffLcs::Stat.new(repo, src_branch, dest_commit) }
-      let!(:stat_mix2) { GitDiffLcs::Stat.new(repo, src_commit, dest_branch) }
+      let!(:stat_mix1) { GitDiffLCS::Stat.new(repo, src_branch, dest_commit) }
+      let!(:stat_mix2) { GitDiffLCS::Stat.new(repo, src_commit, dest_branch) }
 
       it "summary" do
         expect(stat_mix1.summary).to eq("5 files changed, 13 insertions(+), 6 deletions(-), 2 modifications(!), total(21)")

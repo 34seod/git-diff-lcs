@@ -4,4 +4,4 @@
 
 require "git_diff_lcs"
 
-GitDiffLcs::CLI.start(ARGV)
+GitDiffLCS::CLI.start(ARGV)

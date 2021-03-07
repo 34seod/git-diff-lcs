@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
-module GitDiffLcs
-  VERSION = "0.0.5"
+module GitDiffLCS
+  VERSION = "0.0.6"
 end

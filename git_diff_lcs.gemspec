@@ -4,7 +4,7 @@ require_relative "lib/git_diff_lcs/version"
 
 Gem::Specification.new do |spec|
   spec.name        = "git_diff_lcs"
-  spec.version     = GitDiffLcs::VERSION
+  spec.version     = GitDiffLCS::VERSION
   spec.authors     = ["SEO SANG HYUN"]
   spec.email       = "btpink.seo@gmail.com"
 
