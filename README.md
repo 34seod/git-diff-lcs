@@ -15,7 +15,7 @@ $ git_diff_lcs shortstat  https://github.com/btpink-seo/git-diff-lcs.git test/sr
 $ git_diff_lcs shortstat  workspace/git-diff-lcs test/src test/dest
 ```
 
-## compare with git diff
+## Compare with "git diff --shortstat"
 
 ```bash
 $ git diff --shortstat test/src test/dest
