@@ -4,7 +4,7 @@ Generally, git diff --stat does not contain modifications, so we added it to dis
 
 ## Installation
 ```bash
-$ gem install git_diff-lcs
+$ gem install git_diff_lcs
 ```
 
 ## How to use
